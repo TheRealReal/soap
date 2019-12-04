@@ -202,7 +202,7 @@ defmodule Soap.Request.Params do
 
     case get_header_with_namespace(wsdl, operation) do
       nil ->
-        nil
+        body
 
       action_tag ->
         [element(action_tag, action_tag_attributes, body)]
