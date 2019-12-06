@@ -36,6 +36,7 @@ defmodule Soap.Request.Params do
 
   @spec validate_params(params :: any(), wsdl :: map(), operation :: String.t()) :: any()
   def validate_params(params, _wsdl, _operation) when is_binary(params), do: params
+  def validate_params(params, _wsdl, _operation) when is_tuple(params), do: params
 
   def validate_params(params, wsdl, operation) do
     errors =
@@ -130,7 +131,6 @@ defmodule Soap.Request.Params do
       validated_params ->
         body =
           validated_params
-          |> add_header_part_tag_wrapper(wsdl, operation)
           |> add_header_tag_wrapper
 
         {:ok, body}
@@ -147,16 +147,13 @@ defmodule Soap.Request.Params do
 
   @spec construct_xml_request_body(params :: map() | list()) :: list()
   defp construct_xml_request_body(params) when is_map(params) or is_list(params) do
-    params |> Enum.map(&construct_xml_request_body/1)
+    params
+    |> Enum.map(&construct_xml_request_body/1)
   end
 
   @spec construct_xml_request_body(params :: tuple()) :: tuple()
   defp construct_xml_request_body(params) when is_tuple(params) do
     params
-    |> Tuple.to_list()
-    |> Enum.map(&construct_xml_request_body/1)
-    |> insert_tag_parameters
-    |> List.to_tuple()
   end
 
   @spec construct_xml_request_body(params :: String.t() | atom() | number()) :: String.t()
@@ -273,7 +270,6 @@ defmodule Soap.Request.Params do
     envelop_attributes =
       @schema_types
       |> Map.merge(build_soap_version_attribute(wsdl))
-      |> Map.merge(build_action_attribute(wsdl, operation))
       |> Map.merge(custom_namespaces())
 
     [element(:"#{env_namespace()}:Envelope", envelop_attributes, body)]
@@ -288,7 +284,9 @@ defmodule Soap.Request.Params do
   @spec build_action_attribute(map(), String.t()) :: map()
   defp build_action_attribute(wsdl, operation) do
     action_attribute_namespace = get_action_namespace(wsdl, operation)
+
     action_attribute_value = wsdl[:namespaces][action_attribute_namespace][:value]
+
     prepare_action_attribute(action_attribute_namespace, action_attribute_value)
   end
 
