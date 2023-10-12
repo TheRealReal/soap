@@ -1,4 +1,10 @@
 # Soap
+
+This repository has been archived.
+
+📚 Archived Status:
+This repository is no longer actively maintained or updated. It is being preserved for historical reference or potential future use. Issues, pull requests, and contributions are no longer accepted.
+
 [![Build Status](https://travis-ci.org/elixir-soap/soap.svg?branch=master)](https://travis-ci.org/elixir-soap/soap)
 [![Code coverage](https://img.shields.io/coveralls/github/elixir-soap/soap.svg?style=flat)](https://coveralls.io/github/elixir-soap/soap)
 [![Hex version](https://img.shields.io/hexpm/v/soap.svg?style=flat)](https://hex.pm/packages/soap)
